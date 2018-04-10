@@ -1,5 +1,10 @@
 package producerconsumer;
 
+import java.util.Vector;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -244,8 +249,58 @@ public class GUIFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        System.out.println("START");
+        System.out.println("productores:"+jSpinner1.getValue().toString());
+        System.out.println("consumidores:"+jSpinner2.getValue().toString());
+        System.out.println("buffer size:"+jTextField4.getText());
+        System.out.println("min:"+jTextField4.getText());
+        System.out.println("max:"+jSpinner3.getValue().toString());
+        
+        String header[] = {"id", "operation", "num1", "num2"};
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(header);
+        jTable1.setModel(model);
+        
+        String header2[] = {"id", "operator", "result"};
+        DefaultTableModel model2 = new DefaultTableModel();
+        model2.setColumnIdentifiers(header2);
+        jTable2.setModel(model2);
+        
+        int numProd = (int)jSpinner1.getValue();
+        int numCons = (int)jSpinner2.getValue();
+        int min = Integer.valueOf(jTextField4.getText());
+        int max = (int)jSpinner3.getValue();
+
+        Buffer buffer = new Buffer();
+        
+        for(int i = 0; i < numProd; i++){
+            Producer p = new Producer(buffer,i, min, max);
+            p.start();
+        }
+        
+        for(int j = 0; j < numCons; j++){
+            Consumer c = new Consumer(buffer,j);
+            c.start();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    
+    public JTable getToDoTable(){
+        return this.jTable1;
+    }
+    
+    public void setToDoTable(JTable jTable){
+        this.jTable1 = jTable;
+    }
+    
+    public JTable getDoneTable(){
+        return this.jTable2;
+    }
+    
+    public void setDoneTable(JTable jTable){
+        this.jTable2 = jTable;
+    }
+    
     /**
      * @param args the command line arguments
      */

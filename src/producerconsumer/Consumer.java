@@ -3,6 +3,8 @@ package producerconsumer;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class Consumer extends Thread {
     Buffer buffer;
@@ -94,12 +96,22 @@ public class Consumer extends Thread {
                     break;
             }
             
+            String resultStr;
             if(divNotInt){
                 Buffer.print("Consumer"+id+" consumed: " + product + " = "+result_s+" = "+result_d);
                 divNotInt = false;
+                resultStr = " = "+result_s+" = "+result_d;
             } else {
                 Buffer.print("Consumer"+id+" consumed: " + product + " = "+result);
+                resultStr = " = "+result;
             }
+            
+            JTable doneTable = ProducerConsumer.frame.getDoneTable();
+            String[] row = {""+id, ""+product, resultStr};
+            DefaultTableModel currentModel = (DefaultTableModel)doneTable.getModel();
+            currentModel.addRow(row);
+            doneTable.setModel(currentModel);
+            ProducerConsumer.frame.setDoneTable(doneTable);
             
             try {
                 Thread.sleep(1000);

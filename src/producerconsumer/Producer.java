@@ -4,13 +4,15 @@ package producerconsumer;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class Producer extends Thread {
     Buffer buffer;
     int id;
     //Range of numbers -> get from GUI
-    int min = 1;
-    int max = 30;
+    int min;
+    int max;
     //Number of products to produce per producer? 1 or another number?
     int productnum = 5;
     //Operations to use ->arithmetic
@@ -18,9 +20,11 @@ public class Producer extends Thread {
     //To store 10 random numbers
     String[] nums = new String[10];
     
-    Producer(Buffer buffer, int id) {
+    Producer(Buffer buffer, int id, int min, int max) {
         this.buffer = buffer;
         this.id = id;
+        this.min = min;
+        this.max = max;
     }
     
     //To get random value in an array
@@ -49,6 +53,13 @@ public class Producer extends Thread {
             product = "("+operator+" "+num1+" "+num2+")";
             this.buffer.produce(product);
             Buffer.print("Producer"+id+" produced: " + product);
+            
+            JTable toDoTable = ProducerConsumer.frame.getToDoTable();
+            String[] row = {""+id, ""+operator, ""+num1, ""+num2};
+            DefaultTableModel currentModel = (DefaultTableModel)toDoTable.getModel();
+            currentModel.addRow(row);
+            toDoTable.setModel(currentModel);
+            ProducerConsumer.frame.setToDoTable(toDoTable);
             
             try {
                 Thread.sleep(1000);
