@@ -1,6 +1,7 @@
 package producerconsumer;
 
 import java.util.Vector;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -64,6 +65,24 @@ public class GUIFrame extends javax.swing.JFrame {
         setResizable(false);
 
         jLabel5.setText("Tiempo de Espera (ms)");
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
+        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField3ActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Rango de Valores (n, m)");
 
@@ -268,21 +287,73 @@ public class GUIFrame extends javax.swing.JFrame {
         
         int numProd = (int)jSpinner1.getValue();
         int numCons = (int)jSpinner2.getValue();
-        int min = Integer.valueOf(jTextField4.getText());
+        int min = 0;
+        int buffersize = 0;
+        long pTiempo = 0;
+        long cTiempo = 0;
+        try {
+            min = Integer.valueOf(jTextField4.getText());
+            buffersize = Integer.valueOf(jTextField3.getText());
+            pTiempo = Integer.valueOf(jTextField1.getText());
+            cTiempo = Integer.valueOf(jTextField2.getText());
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(null,"Entradas no validas");
+        }
+        
         int max = (int)jSpinner3.getValue();
+        if(numProd <= 0){
+            JOptionPane.showMessageDialog(null,"Numero de productores no valido");
+            varsOk = false;
+        }
+        if(pTiempo <= 0){
+            JOptionPane.showMessageDialog(null,"Tiempo de espera de productores no valido");
+            varsOk = false;
+        }
+        if(numCons <= 0){
+            JOptionPane.showMessageDialog(null,"Numero de consumidores no valido");
+            varsOk = false;
+        }
+        if(cTiempo <= 0){
+            JOptionPane.showMessageDialog(null,"Tiempo de espera de consumidores no valido");
+            varsOk = false;
+        }
+        if(buffersize <= 0){
+            JOptionPane.showMessageDialog(null,"Tamaño del buffer no valido");
+            varsOk = false;
+        }
+        if(min >= max){
+            JOptionPane.showMessageDialog(null,"Rango de valores no valido");
+            varsOk = false;
+        }
+        if(varsOk){
+            jTabbedPane1.setSelectedIndex(1);
 
-        Buffer buffer = new Buffer();
-        
-        for(int i = 0; i < numProd; i++){
-            Producer p = new Producer(buffer,i, min, max);
-            p.start();
+            Buffer buffer = new Buffer();
+
+            for(int i = 0; i < numProd; i++){
+                Producer p = new Producer(buffer,i, min, max);
+                p.start();
+            }
+
+            for(int j = 0; j < numCons; j++){
+                Consumer c = new Consumer(buffer,j);
+                c.start();
+            }
         }
-        
-        for(int j = 0; j < numCons; j++){
-            Consumer c = new Consumer(buffer,j);
-            c.start();
-        }
+        varsOk = true;
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField3ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
     
     public JTable getToDoTable(){
@@ -335,7 +406,8 @@ public class GUIFrame extends javax.swing.JFrame {
             }
         });
     }
-
+    
+    private boolean varsOk = true;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
