@@ -3,18 +3,23 @@ package producerconsumer;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JProgressBar;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import jdk.nashorn.internal.ir.Symbol;
 
 public class Consumer extends Thread {
     Buffer buffer;
     int id;
-    //Number of products to consume per consumer? 1 or another number?
-    int productnum = 5;
+    long time;
+    private JSpinner numConsumed = ProducerConsumer.frame.getConsumedSpinner();
+    private JProgressBar progress = ProducerConsumer.frame.getProgress();
     
-    Consumer(Buffer buffer, int id) {
+    Consumer(Buffer buffer, int id, long time) {
         this.buffer = buffer;
         this.id = id;
+        this.time = time;
     }
     
     //divisions on scheme with integers give back a simplified division rather than the result
@@ -39,7 +44,7 @@ public class Consumer extends Thread {
         //divisions on scheme with integers give back a simplified division rather than the result
         boolean divNotInt = false;
         
-        for(int i=0 ; i<productnum ; i++) {
+        while(!buffer.BuffisEmpty()){
             num1_s = "";
             num2_s = "";
             result_s = "";
@@ -106,15 +111,29 @@ public class Consumer extends Thread {
                 resultStr = " = "+result;
             }
             
+            ProducerConsumer.frame.addConsumedNum();
+            int consumed = ProducerConsumer.frame.getConsumedNum();
+            
             JTable doneTable = ProducerConsumer.frame.getDoneTable();
-            String[] row = {""+id, ""+product, resultStr};
+            String[] row = {""+consumed, ""+id, ""+product, resultStr};
             DefaultTableModel currentModel = (DefaultTableModel)doneTable.getModel();
             currentModel.addRow(row);
             doneTable.setModel(currentModel);
             ProducerConsumer.frame.setDoneTable(doneTable);
             
+            JTable toDoTable = ProducerConsumer.frame.getToDoTable();
+            DefaultTableModel toDoModel = (DefaultTableModel)toDoTable.getModel();
+            if(toDoModel.getRowCount() > 0){
+                //como es un queue, se quita siempre la primera operación que se metió
+                toDoModel.removeRow(0);
+            }
+            //a veces la barra de progreso no funciona???
+            progress.setValue(buffer.getCurrBuffSize());
+            //a veces el Spinner concatena dos valores??? o le falta un valor??
+            numConsumed.setValue(consumed);
+            
             try {
-                Thread.sleep(1000);
+                Thread.sleep(time);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
             }

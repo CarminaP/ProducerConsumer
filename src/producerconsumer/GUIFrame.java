@@ -2,6 +2,8 @@ package producerconsumer;
 
 import java.util.Vector;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -271,20 +273,21 @@ public class GUIFrame extends javax.swing.JFrame {
         System.out.println("START");
         System.out.println("productores:"+jSpinner1.getValue().toString());
         System.out.println("consumidores:"+jSpinner2.getValue().toString());
-        System.out.println("buffer size:"+jTextField4.getText());
+        System.out.println("buffer size:"+jTextField3.getText());
         System.out.println("min:"+jTextField4.getText());
         System.out.println("max:"+jSpinner3.getValue().toString());
         
-        String header[] = {"id", "operation", "num1", "num2"};
+        String header[] = {"id", "operation"};
         DefaultTableModel model = new DefaultTableModel();
         model.setColumnIdentifiers(header);
         jTable1.setModel(model);
         
-        String header2[] = {"id", "operator", "result"};
+        String header2[] = {"num", "id", "operator", "result"};
         DefaultTableModel model2 = new DefaultTableModel();
         model2.setColumnIdentifiers(header2);
         jTable2.setModel(model2);
         
+        this.consumed = 0;
         int numProd = (int)jSpinner1.getValue();
         int numCons = (int)jSpinner2.getValue();
         int min = 0;
@@ -326,17 +329,22 @@ public class GUIFrame extends javax.swing.JFrame {
             varsOk = false;
         }
         if(varsOk){
+            jProgressBar1.setMaximum(buffersize);
+            jProgressBar1.setMinimum(0);
+            jProgressBar1.setValue(0);
+            
+            //Cambiar de tab
             jTabbedPane1.setSelectedIndex(1);
-
-            Buffer buffer = new Buffer();
+            
+            Buffer buffer = new Buffer(buffersize, pTiempo, cTiempo);
 
             for(int i = 0; i < numProd; i++){
-                Producer p = new Producer(buffer,i, min, max);
+                Producer p = new Producer(buffer,i, min, max, pTiempo);
                 p.start();
             }
 
             for(int j = 0; j < numCons; j++){
-                Consumer c = new Consumer(buffer,j);
+                Consumer c = new Consumer(buffer,j, cTiempo);
                 c.start();
             }
         }
@@ -358,6 +366,22 @@ public class GUIFrame extends javax.swing.JFrame {
     
     public JTable getToDoTable(){
         return this.jTable1;
+    }
+    
+    public JProgressBar getProgress(){
+        return this.jProgressBar1;
+    }
+    
+    public JSpinner getConsumedSpinner(){
+        return this.jSpinner4;
+    }
+    
+    public void addConsumedNum(){
+        this.consumed++;
+    }
+    
+    public int getConsumedNum(){
+        return this.consumed;
     }
     
     public void setToDoTable(JTable jTable){
@@ -408,6 +432,7 @@ public class GUIFrame extends javax.swing.JFrame {
     }
     
     private boolean varsOk = true;
+    public int consumed;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
