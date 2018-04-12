@@ -342,7 +342,6 @@ public class GUIFrame extends javax.swing.JFrame {
                 Producer p = new Producer(buffer,i, min, max, pTiempo);
                 p.start();
             }
-            System.err.println("after producer start buffer size:"+buffer.getCurrBuffSize());
             for(int j = 0; j < numCons; j++){
                 Consumer c = new Consumer(buffer,j, cTiempo);
                 c.start();

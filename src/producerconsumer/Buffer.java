@@ -42,14 +42,13 @@ public class Buffer {
     }
     
     synchronized void produce(String product) {
-        if(getCurrBuffSize() >= buffersize) {
+        while(getCurrBuffSize() >= buffersize) {
             try {
                 wait(pTime);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Buffer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
         //add to queue
         this.buffer.add(product);
         print("Buffer size after produce = "+buffer.size());
