@@ -12,16 +12,14 @@ public class Producer extends Thread {
     Buffer buffer;
     int id;
     long time;
-    //Range of numbers -> get from GUI
+    //Rango de numeros -> Obtenidos desde la GUI
     int min;
     int max;
-    //Number of products to produce per producer? 1 or another number?
-    int productnum = 5;
-    //Operations to use ->arithmetic
+    //Operaciones a usar -> Aritmeticas
     String [] op = {"+", "-", "*", "/"};
-    //To store 10 random numbers
+    //Para guardar 10 numeros random dentro del rango
     String[] nums = new String[10];
-    
+    //Para acceder a la barra de progreso en la GUI
     private JProgressBar progress = ProducerConsumer.frame.getProgress();
     
     Producer(Buffer buffer, int id, int min, int max, long time) {
@@ -32,13 +30,14 @@ public class Producer extends Thread {
         this.time = time;
     }
     
-    //To get random value in an array
+    //Para obtener un valor de una posicion random de un arreglo
     static String getRandom(String[] arr) {
         Random gen = new Random();
         int rand = gen.nextInt(arr.length);  
         return arr[rand];  
     }
     
+    //Para actualizar el valor de la barra de progreso de la capacidad del buffer
     public synchronized void progressSetValue(int value){
         progress.setValue(value);
     }
@@ -50,23 +49,32 @@ public class Producer extends Thread {
         String product;
         int i;
         
-        //create new random numbers and add them to the array
+        //Crear numeros aleatorios dentro del rango y guardarlos en u array
         Random rand = new Random();
         for (int j = 0; j < 10; j++) {
           nums[j] = Integer.toString(rand.nextInt((max - min) + 1) + min);
         }
         
+        //Cada productor produce lo suficiente como para llenar el buffer 1 vez
         for(i=0 ; i < this.buffer.buffersize ; i++) {
+            //obtener una operacion aleatoria
             String operator = getRandom(op);
+            //obtener un primer numero aleatorio
             String num1 = getRandom(nums);
+            //obtener un segundo numero aleatorio
             String num2 = getRandom(nums);
+            //Concaternar las partes para el producto
             product = "("+operator+" "+num1+" "+num2+")";
+            //agregar el producto al buffer
             this.buffer.produce(product);
+            
             Buffer.print("Producer"+id+" produced: " + product);
             
+            //agregar la nueva fila a la tabla de tareas por hacer
             String[] row = {""+id, ""+product};
             ProducerConsumer.frame.addToDoRow(row);
             
+            //actualizar la barra de progreso de la capacidad del buffer
             progressSetValue(buffer.getCurrBuffSize());
             
             try {
@@ -75,6 +83,9 @@ public class Producer extends Thread {
                 Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        //Si se ha terminado de producir
+        //agregar +1 a la variable en buffer que cuenta el numero de productores que han terminado de producir
         if(i == this.buffer.buffersize){
             this.buffer.pFinished();
         }

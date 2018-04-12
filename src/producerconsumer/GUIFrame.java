@@ -8,16 +8,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author sdegante
- */
 public class GUIFrame extends javax.swing.JFrame {
 
     /**
@@ -103,11 +93,10 @@ public class GUIFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jSpinner2)
@@ -119,9 +108,9 @@ public class GUIFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField1)
-                    .addComponent(jTextField2)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(229, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,7 +146,9 @@ public class GUIFrame extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,16 +195,18 @@ public class GUIFrame extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
                     .addComponent(jSpinner4))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -277,16 +270,19 @@ public class GUIFrame extends javax.swing.JFrame {
         System.out.println("min:"+jTextField4.getText());
         System.out.println("max:"+jSpinner3.getValue().toString());
         
+        //Tabla de tareas por realizar
         String header[] = {"id", "operation"};
         DefaultTableModel model = new DefaultTableModel();
         model.setColumnIdentifiers(header);
         jTable1.setModel(model);
         
+        //Tabla de tareas realizadas
         String header2[] = {"num", "id", "operator", "result"};
         DefaultTableModel model2 = new DefaultTableModel();
         model2.setColumnIdentifiers(header2);
         jTable2.setModel(model2);
         
+        //inicializacion de variables con entradas del GUI
         this.consumed = 0;
         this.numProd = (int)jSpinner1.getValue();
         int numCons = (int)jSpinner2.getValue();
@@ -301,9 +297,10 @@ public class GUIFrame extends javax.swing.JFrame {
             cTiempo = Integer.valueOf(jTextField2.getText());
         } catch (Exception e){
             JOptionPane.showMessageDialog(null,"Entradas no validas");
-        }
-        
+        }        
         int max = (int)jSpinner3.getValue();
+        
+        //Revision de las entradas con mensajes acordes
         if(this.numProd <= 0){
             JOptionPane.showMessageDialog(null,"Numero de productores no valido");
             varsOk = false;
@@ -328,25 +325,33 @@ public class GUIFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,"Rango de valores no valido");
             varsOk = false;
         }
+        
+        //Si todas las entradas son correctas iniciar el proceso
         if(varsOk){
+            //establecer los limites de la barra de progreso y el valor inicial
             jProgressBar1.setMaximum(buffersize);
             jProgressBar1.setMinimum(0);
             jProgressBar1.setValue(0);
              
-           //Cambiar de tab
+            //Cambiar de tab
             jTabbedPane1.setSelectedIndex(1);
             
+            //Crear buffer
             Buffer buffer = new Buffer(buffersize, pTiempo, cTiempo);
-
+            
+            //Crear e iniciar productores
             for(int i = 0; i < numProd; i++){
                 Producer p = new Producer(buffer,i, min, max, pTiempo);
                 p.start();
             }
+            
+            //Crear e iniciar consumidores
             for(int j = 0; j < numCons; j++){
                 Consumer c = new Consumer(buffer,j, cTiempo);
                 c.start();
             }
         }
+        //Cambiar a true para la siguiente vez que se haga click en el boton INICIAR
         varsOk = true;
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -362,55 +367,66 @@ public class GUIFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
 
-    
+    //Acceder a la tabla de tareas por hacer por fuera de GUIFrame
     public synchronized JTable getToDoTable(){
         return this.jTable1;
     }
     
+    //Acceder a la barra de progreso de la capacidad del buffer por fuera de GUIFrame
     public synchronized JProgressBar getProgress(){
         return this.jProgressBar1;
     }
     
+    //Acceder al spinner con el numero de tareas realizadas por hacer fuera de GUIFrame
     public synchronized JSpinner getConsumedSpinner(){
         return this.jSpinner4;
     }
     
+    //agregar +1 a la variable que cuenta las tareas realizadas
     public synchronized void addConsumedNum(){
         this.consumed++;
     }
     
+    //Obtener el numero de tareas realizadas
     public synchronized int getConsumedNum(){
         return this.consumed;
     }
     
+    //Obtener el numero de productores declarados
     public synchronized int getProdNum(){
         return this.numProd;
     }
     
+    //Establecer cambios a la tabla de tareas por realizar hechos fuera de GUIFrame
     public synchronized void setToDoTable(JTable jTable){
         this.jTable1 = jTable;
     }
     
+    //Remover la ultima fila de tareas por hacer
     public synchronized void removeToDo(){
         DefaultTableModel toDoModel = (DefaultTableModel)this.jTable1.getModel();
         toDoModel.removeRow(0);
         this.jTable1.setModel(toDoModel);
     }
     
+    //Agregar fila a la tabla de tareas por hacer
     public synchronized void addToDoRow(String[] row){
         DefaultTableModel currentModel = (DefaultTableModel)this.jTable1.getModel();
         currentModel.addRow(row);
         this.jTable1.setModel(currentModel);
     }
     
+    //Acceder a la tabla de tareas realizadas desde fuera de GUIFrame
     public synchronized JTable getDoneTable(){
         return this.jTable2;
     }
     
+    //Establecer cambios a la tabla de tareas realizadas hechos fuera de GUIFrame
     public synchronized void setDoneTable(JTable jTable){
         this.jTable2 = jTable;
     }
     
+    //Agregar fila a la tabla de tareas realizadas
     public synchronized void addDoneRow(String[] row){
         DefaultTableModel currentModel = (DefaultTableModel)this.jTable2.getModel();
         currentModel.addRow(row);
@@ -452,9 +468,13 @@ public class GUIFrame extends javax.swing.JFrame {
         });
     }
     
+    //Para revisar que las entradas hayan sido correctas
     private boolean varsOk = true;
+    //para guardar el numero de tareas realizadas
     public int consumed;
+    //para acceder al numero de productores declarados
     public int numProd;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

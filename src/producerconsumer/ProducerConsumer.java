@@ -1,6 +1,7 @@
 
 package producerconsumer;
 
+//Clase intermediaria entre GUIFrame, Buffer, Consumer y Producer
 public class ProducerConsumer {
 
     public static GUIFrame frame;
