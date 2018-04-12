@@ -21,6 +21,7 @@ public class Producer extends Thread {
     String [] op = {"+", "-", "*", "/"};
     //To store 10 random numbers
     String[] nums = new String[10];
+    private JProgressBar progress = ProducerConsumer.frame.getProgress();
     
     Producer(Buffer buffer, int id, int min, int max, long time) {
         this.buffer = buffer;
@@ -35,6 +36,11 @@ public class Producer extends Thread {
         Random gen = new Random();
         int rand = gen.nextInt(arr.length);  
         return arr[rand];  
+    }
+    
+    public synchronized void progressSetValue(int value){
+        //a veces la barra de progreso no funciona???
+        progress.setValue(value);
     }
     
     @Override
@@ -63,8 +69,7 @@ public class Producer extends Thread {
             currentModel.addRow(row);
             toDoTable.setModel(currentModel);
             ProducerConsumer.frame.setToDoTable(toDoTable);
-            JProgressBar progress = ProducerConsumer.frame.getProgress();
-            progress.setValue(buffer.getCurrBuffSize());
+            progressSetValue(buffer.getCurrBuffSize());
             
             try {
                 Thread.sleep(time);

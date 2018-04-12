@@ -33,6 +33,16 @@ public class Consumer extends Thread {
         return (a / gcm) + "/" + (b / gcm);
     }
     
+    public synchronized void progressSetValue(int value){
+        //a veces la barra de progreso no funciona???
+        progress.setValue(value);
+    }
+    
+    public synchronized void consumedSetValue(int value){
+        //a veces el Spinner concatena dos valores??? o le falta un valor??
+        numConsumed.setValue(value);
+    }
+    
     @Override
     public void run() {
         System.out.println("Running Consumer...");
@@ -54,9 +64,9 @@ public class Consumer extends Thread {
             product = this.buffer.consume();
             
             //sometimes we still get null products??
-            if(product == null){
+            /*if(product == null){
                 continue;
-            }
+            }*/
             
             char[] array = product.toCharArray();
             op = array[1];
@@ -127,10 +137,8 @@ public class Consumer extends Thread {
                 //como es un queue, se quita siempre la primera operación que se metió
                 toDoModel.removeRow(0);
             }
-            //a veces la barra de progreso no funciona???
-            progress.setValue(buffer.getCurrBuffSize());
-            //a veces el Spinner concatena dos valores??? o le falta un valor??
-            numConsumed.setValue(consumed);
+            progressSetValue(buffer.getCurrBuffSize());
+            consumedSetValue(consumed);
             
             try {
                 Thread.sleep(time);

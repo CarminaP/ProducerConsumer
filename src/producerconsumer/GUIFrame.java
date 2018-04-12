@@ -332,8 +332,8 @@ public class GUIFrame extends javax.swing.JFrame {
             jProgressBar1.setMaximum(buffersize);
             jProgressBar1.setMinimum(0);
             jProgressBar1.setValue(0);
-            
-            //Cambiar de tab
+             
+           //Cambiar de tab
             jTabbedPane1.setSelectedIndex(1);
             
             Buffer buffer = new Buffer(buffersize, pTiempo, cTiempo);
@@ -347,6 +347,9 @@ public class GUIFrame extends javax.swing.JFrame {
                 Consumer c = new Consumer(buffer,j, cTiempo);
                 c.start();
             }
+            
+            jSpinner4.setValue((int)jSpinner4.getValue()-1);
+            jSpinner4.setValue((int)jSpinner4.getValue()+1);
         }
         varsOk = true;
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -364,35 +367,35 @@ public class GUIFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     
-    public JTable getToDoTable(){
+    public synchronized JTable getToDoTable(){
         return this.jTable1;
     }
     
-    public JProgressBar getProgress(){
+    public synchronized JProgressBar getProgress(){
         return this.jProgressBar1;
     }
     
-    public JSpinner getConsumedSpinner(){
+    public synchronized JSpinner getConsumedSpinner(){
         return this.jSpinner4;
     }
     
-    public void addConsumedNum(){
+    public synchronized void addConsumedNum(){
         this.consumed++;
     }
     
-    public int getConsumedNum(){
+    public synchronized int getConsumedNum(){
         return this.consumed;
     }
     
-    public void setToDoTable(JTable jTable){
+    public synchronized void setToDoTable(JTable jTable){
         this.jTable1 = jTable;
     }
     
-    public JTable getDoneTable(){
+    public synchronized JTable getDoneTable(){
         return this.jTable2;
     }
     
-    public void setDoneTable(JTable jTable){
+    public synchronized void setDoneTable(JTable jTable){
         this.jTable2 = jTable;
     }
     

@@ -62,11 +62,11 @@ public class Buffer {
         System.out.println(string);
     }
     
-    public int getCurrBuffSize(){
+    public synchronized int getCurrBuffSize(){
         return buffer.size();
     }
     
-    public boolean BuffisEmpty(){
+    public synchronized boolean BuffisEmpty(){
         return buffer.isEmpty();
     }
 }
