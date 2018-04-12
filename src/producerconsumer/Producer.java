@@ -21,6 +21,7 @@ public class Producer extends Thread {
     String [] op = {"+", "-", "*", "/"};
     //To store 10 random numbers
     String[] nums = new String[10];
+    
     private JProgressBar progress = ProducerConsumer.frame.getProgress();
     
     Producer(Buffer buffer, int id, int min, int max, long time) {
@@ -39,7 +40,6 @@ public class Producer extends Thread {
     }
     
     public synchronized void progressSetValue(int value){
-        //a veces la barra de progreso no funciona???
         progress.setValue(value);
     }
     
@@ -48,14 +48,15 @@ public class Producer extends Thread {
         System.out.println("Running Producer...");
         
         String product;
+        int i;
         
         //create new random numbers and add them to the array
         Random rand = new Random();
-        for (int i = 0; i < 10; i++) {
-          nums[i] = Integer.toString(rand.nextInt((max - min) + 1) + min);
+        for (int j = 0; j < 10; j++) {
+          nums[j] = Integer.toString(rand.nextInt((max - min) + 1) + min);
         }
         
-        for(int i=0 ; i < this.buffer.buffersize ; i++) {
+        for(i=0 ; i < this.buffer.buffersize ; i++) {
             String operator = getRandom(op);
             String num1 = getRandom(nums);
             String num2 = getRandom(nums);
@@ -63,12 +64,9 @@ public class Producer extends Thread {
             this.buffer.produce(product);
             Buffer.print("Producer"+id+" produced: " + product);
             
-            JTable toDoTable = ProducerConsumer.frame.getToDoTable();
             String[] row = {""+id, ""+product};
-            DefaultTableModel currentModel = (DefaultTableModel)toDoTable.getModel();
-            currentModel.addRow(row);
-            toDoTable.setModel(currentModel);
-            ProducerConsumer.frame.setToDoTable(toDoTable);
+            ProducerConsumer.frame.addToDoRow(row);
+            
             progressSetValue(buffer.getCurrBuffSize());
             
             try {
@@ -76,6 +74,9 @@ public class Producer extends Thread {
             } catch (InterruptedException ex) {
                 Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+        if(i == this.buffer.buffersize){
+            this.buffer.pFinished();
         }
     }
     

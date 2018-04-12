@@ -288,7 +288,7 @@ public class GUIFrame extends javax.swing.JFrame {
         jTable2.setModel(model2);
         
         this.consumed = 0;
-        int numProd = (int)jSpinner1.getValue();
+        this.numProd = (int)jSpinner1.getValue();
         int numCons = (int)jSpinner2.getValue();
         int min = 0;
         int buffersize = 0;
@@ -304,7 +304,7 @@ public class GUIFrame extends javax.swing.JFrame {
         }
         
         int max = (int)jSpinner3.getValue();
-        if(numProd <= 0){
+        if(this.numProd <= 0){
             JOptionPane.showMessageDialog(null,"Numero de productores no valido");
             varsOk = false;
         }
@@ -342,14 +342,11 @@ public class GUIFrame extends javax.swing.JFrame {
                 Producer p = new Producer(buffer,i, min, max, pTiempo);
                 p.start();
             }
-
+            System.err.println("after producer start buffer size:"+buffer.getCurrBuffSize());
             for(int j = 0; j < numCons; j++){
                 Consumer c = new Consumer(buffer,j, cTiempo);
                 c.start();
             }
-            
-            jSpinner4.setValue((int)jSpinner4.getValue()-1);
-            jSpinner4.setValue((int)jSpinner4.getValue()+1);
         }
         varsOk = true;
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -387,8 +384,24 @@ public class GUIFrame extends javax.swing.JFrame {
         return this.consumed;
     }
     
+    public synchronized int getProdNum(){
+        return this.numProd;
+    }
+    
     public synchronized void setToDoTable(JTable jTable){
         this.jTable1 = jTable;
+    }
+    
+    public synchronized void removeToDo(){
+        DefaultTableModel toDoModel = (DefaultTableModel)this.jTable1.getModel();
+        toDoModel.removeRow(0);
+        this.jTable1.setModel(toDoModel);
+    }
+    
+    public synchronized void addToDoRow(String[] row){
+        DefaultTableModel currentModel = (DefaultTableModel)this.jTable1.getModel();
+        currentModel.addRow(row);
+        this.jTable1.setModel(currentModel);
     }
     
     public synchronized JTable getDoneTable(){
@@ -397,6 +410,12 @@ public class GUIFrame extends javax.swing.JFrame {
     
     public synchronized void setDoneTable(JTable jTable){
         this.jTable2 = jTable;
+    }
+    
+    public synchronized void addDoneRow(String[] row){
+        DefaultTableModel currentModel = (DefaultTableModel)this.jTable2.getModel();
+        currentModel.addRow(row);
+        this.jTable2.setModel(currentModel);
     }
     
     /**
@@ -436,6 +455,7 @@ public class GUIFrame extends javax.swing.JFrame {
     
     private boolean varsOk = true;
     public int consumed;
+    public int numProd;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

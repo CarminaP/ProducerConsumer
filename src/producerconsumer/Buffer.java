@@ -8,52 +8,52 @@ import java.util.logging.Logger;
 import javax.swing.JProgressBar;
 
 public class Buffer {
-    
-    //private String buffer;
+
     private Queue<String> buffer = new LinkedList<String>();;
     int buffersize;
     long cTime;
     long pTime;
     public JProgressBar progress = ProducerConsumer.frame.getProgress();
+    int pFinish;
     
     Buffer(int buffersize, long pTime, long cTime) {
         this.buffersize = buffersize;
         this.pTime = pTime;
         this.cTime = cTime;
+        this.pFinish = 0;
     }
     
     synchronized String consume() {
         String product = null;
-        if(this.buffer.isEmpty()) {
+        
+        if(BuffisEmpty()) {
             try {
                 wait(cTime);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Buffer.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            //take from queue
+        }
+        
+        //take from queue
         product = this.buffer.remove();
         print("Buffer size after consume = "+buffer.size());
         notify();
-        }
-        
         return product;
     }
     
     synchronized void produce(String product) {
-        if(buffer.size() >= buffersize) {
+        if(getCurrBuffSize() >= buffersize) {
             try {
                 wait(pTime);
-                //add to queue
             } catch (InterruptedException ex) {
                 Logger.getLogger(Buffer.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            //add to queue
-            this.buffer.add(product);
-            print("Buffer size after produce = "+buffer.size());
-            notify();
         }
+        
+        //add to queue
+        this.buffer.add(product);
+        print("Buffer size after produce = "+buffer.size());
+        notify();
     }
     
     static int count = 1;
@@ -68,5 +68,13 @@ public class Buffer {
     
     public synchronized boolean BuffisEmpty(){
         return buffer.isEmpty();
+    }
+    
+    public synchronized void pFinished(){
+        this.pFinish++;
+    }
+    
+    public synchronized int getFinishedP(){
+        return this.pFinish;
     }
 }

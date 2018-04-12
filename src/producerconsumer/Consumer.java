@@ -34,12 +34,10 @@ public class Consumer extends Thread {
     }
     
     public synchronized void progressSetValue(int value){
-        //a veces la barra de progreso no funciona???
         progress.setValue(value);
     }
     
     public synchronized void consumedSetValue(int value){
-        //a veces el Spinner concatena dos valores??? o le falta un valor??
         numConsumed.setValue(value);
     }
     
@@ -54,7 +52,7 @@ public class Consumer extends Thread {
         //divisions on scheme with integers give back a simplified division rather than the result
         boolean divNotInt = false;
         
-        while(!buffer.BuffisEmpty()){
+        while(this.buffer.getFinishedP() < ProducerConsumer.frame.getProdNum() || !buffer.BuffisEmpty()){
             num1_s = "";
             num2_s = "";
             result_s = "";
@@ -62,11 +60,6 @@ public class Consumer extends Thread {
             result_d = 0.0;
             
             product = this.buffer.consume();
-            
-            //sometimes we still get null products??
-            /*if(product == null){
-                continue;
-            }*/
             
             char[] array = product.toCharArray();
             op = array[1];
@@ -124,21 +117,14 @@ public class Consumer extends Thread {
             ProducerConsumer.frame.addConsumedNum();
             int consumed = ProducerConsumer.frame.getConsumedNum();
             
-            JTable doneTable = ProducerConsumer.frame.getDoneTable();
             String[] row = {""+consumed, ""+id, ""+product, resultStr};
-            DefaultTableModel currentModel = (DefaultTableModel)doneTable.getModel();
-            currentModel.addRow(row);
-            doneTable.setModel(currentModel);
-            ProducerConsumer.frame.setDoneTable(doneTable);
+            ProducerConsumer.frame.addDoneRow(row);
             
-            JTable toDoTable = ProducerConsumer.frame.getToDoTable();
-            DefaultTableModel toDoModel = (DefaultTableModel)toDoTable.getModel();
-            if(toDoModel.getRowCount() > 0){
-                //como es un queue, se quita siempre la primera operación que se metió
-                toDoModel.removeRow(0);
-            }
+            ProducerConsumer.frame.removeToDo();
+            
             progressSetValue(buffer.getCurrBuffSize());
             consumedSetValue(consumed);
+            
             
             try {
                 Thread.sleep(time);
