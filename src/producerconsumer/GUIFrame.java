@@ -284,13 +284,13 @@ public class GUIFrame extends javax.swing.JFrame {
         
         //Tabla de tareas por realizar
         String header[] = {"id", "operation"};
-        DefaultTableModel model = new DefaultTableModel();
+        SynchTableModel model = new SynchTableModel();
         model.setColumnIdentifiers(header);
         jTable1.setModel(model);
         
         //Tabla de tareas realizadas
         String header2[] = {"num", "id", "operator", "result"};
-        DefaultTableModel model2 = new DefaultTableModel();
+        SynchTableModel model2 = new SynchTableModel();
         model2.setColumnIdentifiers(header2);
         jTable2.setModel(model2);
         
@@ -308,33 +308,33 @@ public class GUIFrame extends javax.swing.JFrame {
             pTiempo = Integer.valueOf(jTextField1.getText());
             cTiempo = Integer.valueOf(jTextField2.getText());
         } catch (Exception e){
-            JOptionPane.showMessageDialog(null,"Entradas no validas");
+            JOptionPane.showMessageDialog(null,"Entradas no validas. Todos los valores deben ser numéricos.");
         }        
         int max = (int)jSpinner3.getValue();
         
         //Revision de las entradas con mensajes acordes
         if(this.numProd <= 0){
-            JOptionPane.showMessageDialog(null,"Numero de productores no valido");
+            JOptionPane.showMessageDialog(null,"Numero de productores no valido, debe ser > 0");
             varsOk = false;
         }
-        if(pTiempo <= 0){
-            JOptionPane.showMessageDialog(null,"Tiempo de espera de productores no valido");
+        if(pTiempo < 0){
+            JOptionPane.showMessageDialog(null,"Tiempo de espera de productores no valido, debe ser >= 0");
             varsOk = false;
         }
         if(numCons <= 0){
-            JOptionPane.showMessageDialog(null,"Numero de consumidores no valido");
+            JOptionPane.showMessageDialog(null,"Numero de consumidores no valido, debe ser > 0");
             varsOk = false;
         }
-        if(cTiempo <= 0){
-            JOptionPane.showMessageDialog(null,"Tiempo de espera de consumidores no valido");
+        if(cTiempo < 0){
+            JOptionPane.showMessageDialog(null,"Tiempo de espera de consumidores no valido, debe ser >= 0");
             varsOk = false;
         }
         if(buffersize <= 0){
-            JOptionPane.showMessageDialog(null,"Tamaño del buffer no valido");
+            JOptionPane.showMessageDialog(null,"Tamaño del buffer no valido, debe ser > 0");
             varsOk = false;
         }
         if(min >= max){
-            JOptionPane.showMessageDialog(null,"Rango de valores no valido");
+            JOptionPane.showMessageDialog(null,"Rango de valores no valido, max > min");
             varsOk = false;
         }
         
@@ -416,14 +416,14 @@ public class GUIFrame extends javax.swing.JFrame {
     
     //Remover la ultima fila de tareas por hacer
     public synchronized void removeToDo(){
-        DefaultTableModel toDoModel = (DefaultTableModel)this.jTable1.getModel();
+        SynchTableModel toDoModel = (SynchTableModel)this.jTable1.getModel();
         toDoModel.removeRow(0);
         this.jTable1.setModel(toDoModel);
     }
     
     //Agregar fila a la tabla de tareas por hacer
     public synchronized void addToDoRow(String[] row){
-        DefaultTableModel currentModel = (DefaultTableModel)this.jTable1.getModel();
+        SynchTableModel currentModel = (SynchTableModel)this.jTable1.getModel();
         currentModel.addRow(row);
         this.jTable1.setModel(currentModel);
     }
@@ -440,7 +440,7 @@ public class GUIFrame extends javax.swing.JFrame {
     
     //Agregar fila a la tabla de tareas realizadas
     public synchronized void addDoneRow(String[] row){
-        DefaultTableModel currentModel = (DefaultTableModel)this.jTable2.getModel();
+        SynchTableModel currentModel = (SynchTableModel)this.jTable2.getModel();
         currentModel.addRow(row);
         this.jTable2.setModel(currentModel);
     }
